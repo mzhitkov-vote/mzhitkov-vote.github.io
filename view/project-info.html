@@ -1,0 +1,18 @@
+<div class="item">
+    <div class="card">
+        <h5 class="card-header">{{currentProject.name}}</h5>
+        <div class="card-body">
+            <a href="#" class="badge badge-warning">{{currentProject.category}}</a>
+            <p class="card-text">{{currentProject.description}}</p>
+            <a href="#" class="btn btn-primary btn-color">Проголосувати</a>
+            <a href="#" class="btn btn-primary btn-color float-right">Читати більше</a>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col"><span class="fa fa-calendar fai"></span>{{currentProject.createdAt}}</div>
+                <div class="col text-right"><span class="fa fa-user fai"></span>{{currentProject.user.email}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>

@@ -1,0 +1,114 @@
+* {
+box-sizing: border-box;
+}
+
+*:focus {
+	outline: none;
+}
+body {
+font-family: Arial;
+background-color: #00bebe;
+}
+
+body .login {
+  padding: 50px;
+}
+
+.login {
+margin: 20px auto;
+width: 300px;
+}
+.login-screen {
+background-color: #FFF;
+padding: 20px;
+border-radius: 5px;
+  width: 300px;
+}
+
+.app-title {
+text-align: center;
+color: #777;
+}
+
+.login-form {
+text-align: center;
+}
+.control-group {
+margin-bottom: 10px;
+}
+
+.login  input {
+text-align: center;
+background-color: #ECF0F1;
+border: 2px solid transparent;
+border-radius: 3px;
+font-size: 16px;
+font-weight: 200;
+padding: 10px 0;
+width: 250px;
+transition: border .5s;
+}
+
+.login  input:focus {
+border: 2px solid #00bebe;
+box-shadow: none;
+}
+
+.login  .btn {
+  border: 2px solid transparent;
+  background: #00bebe;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 25px;
+  padding: 10px 0;
+  text-decoration: none;
+  text-shadow: none;
+  border-radius: 3px;
+  box-shadow: none;
+  transition: 0.25s;
+  display: block;
+  width: 250px;
+  margin: 0 auto;
+}
+
+.login  .btn:hover {
+  background-color: #009f9f;
+}
+
+.login-link {
+  font-size: 12px;
+  color: #444;
+  display: block;
+	margin-top: 12px;
+}
+
+.margin5{
+  margin: 5px;
+}
+
+.login  .btn:active{
+  background-color: #006363;
+}
+
+.login-form .btn {
+  color: #ffffff!important;
+}
+.done {
+  text-decoration:  line-through;
+
+}
+
+.container{
+  background-color: white;
+}
+
+.btn-color {
+  background: #00bebe;
+  border: none;
+}
+.item {
+  margin: 20px 0;
+}
+.fai {
+  margin: 0 5px;
+}

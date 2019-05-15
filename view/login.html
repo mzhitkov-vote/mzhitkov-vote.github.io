@@ -1,0 +1,24 @@
+<div class="login">
+    <div class="login-screen">
+        <div class="app-title">
+            <h1>Login</h1>
+        </div>
+        <div class="alert alert-danger" role="alert" ng-if="loginError">{{loginError}}</div>
+        <div class="login-form">
+            <div class="control-group">
+                <input type="text" class="login-field" id="login-name" ng-model="user.email" placeholder="email" required="">
+                <label class="login-field-icon fui-user" for="login-name"></label>
+            </div>
+
+            <div class="control-group">
+                <input type="password" class="login-field" id="login-pass" ng-model="user.password" placeholder="Пароль" required="">
+                <label class="login-field-icon fui-lock" for="login-pass"></label>
+            </div>
+
+            <a class="btn btn-primary btn-large btn-block" ng-click="login(user)">Війти в систему</a>
+            <div class="change_link">Вперше у нас? </div>
+            <a class="btn btn-primary btn-large btn-block" ng-click="register(user)"> Зареєструватися в системі </a>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="jumbotron">
+    <h1 class="display-4">Народний вибір</h1>
+    <p class="lead">Місце де ти можеш проголосувати за проект</p>
+
+</div>
+
+<div class="item" ng-repeat="project in projects">
+    <div class="card">
+        <h5 class="card-header">{{project.name}}</h5>
+        <div class="card-body">
+            <a href="#" class="badge badge-warning">{{project.category}}</a>
+            <p class="card-text">{{project.shortDescription}}</p>
+            <a href="#" class="btn btn-primary btn-color">Проголосувати</a>
+            <a class="btn btn-primary btn-color float-right" ng-click="showProject(project)">Читати більше</a>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col"><span class="fa fa-calendar fai"></span>{{project.createdAt}}</div>
+                <div class="col text-right"><span class="fa fa-user fai"></span>{{project.user.email}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
