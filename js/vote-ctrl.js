@@ -20,6 +20,7 @@ angular.module('myApp')
             project.user = $rootScope.currentUser;
             project.createdAt = (new Date()).toLocaleString('en-US', {hour12: false});
             $scope.addToCollection(project, "projects");
+           $rootScope.projects= getCollection('currentProject');
             alert("Проект подано. Ви його можете побачити у списку всіх проектів.");
             window.location.hash = "#/projects"
         };
