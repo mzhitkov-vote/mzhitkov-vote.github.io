@@ -4,14 +4,22 @@
 
 </div>
 
-<div class="item" ng-repeat="project in projects">
+<div class="btn-group" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-warning" ng-click="filterProject()">усі</button>
+    <button type="button" class="btn btn-warning" ng-repeat="category in categories" ng-click="filterProject(category)">{{category}}</button>
+</div>
+
+<div class="item" ng-repeat="project in projects track by $index">
     <div class="card">
         <h5 class="card-header">{{project.name}}</h5>
         <div class="card-body">
-            <a href="#" class="badge badge-warning">{{project.category}}</a>
+            <div class="badge badge-warning">{{project.category}}</div>
             <p class="card-text">{{project.shortDescription}}</p>
-            <a href="#" class="btn btn-primary btn-color">Проголосувати</a>
-            <a class="btn btn-primary btn-color float-right" ng-click="showProject(project)">Читати більше</a>
+            <div>{{project.voteUsers.length}} голосів</div>
+            <button  ng-show="isVoted(project)" class="btn btn-success btn-color" ng-click="removeVote(project)">Забрати свій голос</button>
+            <button  ng-show="!isVoted(project) && !isVoteRestricted()" class="btn btn-primary btn-color" ng-click="vote(project)">Проголосувати</button>
+            <button  ng-show="!isVoted(project) && isVoteRestricted()" class="btn btn-primary btn-color" disabled><span>Ви не можете віддати свій голос, тому що проголосували за 3 проекта</span> </button>
+            <div class="btn btn-primary btn-color float-right" ng-click="showProject(project)">Читати більше</div>
         </div>
         <div class="card-footer">
             <div class="row">

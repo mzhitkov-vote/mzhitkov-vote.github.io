@@ -1,12 +1,13 @@
 'use strict';
 angular.module('myApp')
     .controller('voteCtrl', function ($scope, $rootScope, $cookies, $window) {
-        $rootScope.currentUser = getCollection('currentUser');
-        $rootScope.currentProject = getCollection('currentProject');
+        $rootScope.currentUser = getObject('currentUser');
+        $rootScope.currentProject = getObject('currentProject');
         $rootScope.projects = getCollection('projects');
 
         $rootScope.categories = ["житлово-комунальні", "освіта", "культура", "спорт"];
         var project = {
+            id: 0,
             user: {},
             name: "",
             description: "",
@@ -17,17 +18,65 @@ angular.module('myApp')
         };
 
         $scope.createProject = function (project) {
+            project.id = id();
             project.user = $rootScope.currentUser;
+            project.voteUsers = [];
             project.createdAt = (new Date()).toLocaleString('en-US', {hour12: false});
-            $scope.addToCollection(project, "projects");
-           $rootScope.projects= getCollection('currentProject');
+            addToCollection(project, "projects");
+            $rootScope.projects = getCollection('projects');
             alert("Проект подано. Ви його можете побачити у списку всіх проектів.");
             window.location.hash = "#/projects"
         };
 
+        $scope.filterProject = function (category) {
+            if (!category)
+                $rootScope.projects = getCollection('projects');
+            else
+                $rootScope.projects = getCollection('projects').filter(function (element) {
+                    return element.category == category;
+                })
+        };
+
+        $scope.removeVote = function (project) {
+            removeFromArr(project.voteUsers, $rootScope.currentUser.id);
+            updateElementInCollection(project, "projects");
+
+            removeFromArr($rootScope.currentUser.voteProjects, project.id);
+            updateElementInCollection($rootScope.currentUser, "users");
+            addObject($rootScope.currentUser, 'currentUser');
+        };
+
+        $scope.vote = function (project) {
+            if ($scope.isUserVoted(project) || $scope.isVoteRestricted()) return;
+
+            project.voteUsers.push($rootScope.currentUser.id);
+            updateElementInCollection(project, "projects");
+
+            $rootScope.currentUser.voteProjects.push(project.id);
+            updateElementInCollection($rootScope.currentUser, "users");
+            addObject($rootScope.currentUser, 'currentUser');
+        };
+
+
+        $scope.isVoteRestricted = function () {
+            return $rootScope.currentUser.voteProjects.length >= 3;
+        };
+
+        $scope.isVoted = function (project) {
+            return $rootScope.currentUser.voteProjects.filter(function (element) {
+                    return element == project.id;
+                }).length > 0;
+        };
+
+        $scope.isUserVoted = function (project) {
+            return project.voteUsers.filter(function (element, index, array) {
+                    return element == $rootScope.currentUser.id;
+                }).length > 0;
+        };
+
         $scope.showProject = function (project) {
             $rootScope.currentProject = project;
-            $cookies.putObject("currentProject", $rootScope.currentProject);
+            addObject($rootScope.currentProject, "currentProject");
             window.location.hash = "#/projects/info"
         };
 
@@ -36,14 +85,11 @@ angular.module('myApp')
         };
 
         $scope.login = function (loginUser) {
-            var users = $cookies.getObject('users');
-            if (!users) {
-                users = [];
-            }
-            ;
+            var users = getCollection('users');
+
             var user = $scope.findUserByName(users, loginUser.email);
             if (user && loginUser.password == user.password) {
-                $cookies.putObject('currentUser', user);
+                addObject(user, 'currentUser');
                 $rootScope.currentUser = user;
                 $scope.loginError = 0;
                 window.location.hash = "#/projects"
@@ -53,19 +99,15 @@ angular.module('myApp')
         };
 
         $scope.logout = function () {
-            $cookies.remove('currentUser');
+            dropCollection('currentUser');
             $rootScope.currentUser = null;
             window.location.hash = "#/"
         };
 
         $scope.register = function (user) {
-            var users = $cookies.getObject('users');
-            if (!users) {
-                users = [];
-            }
-            ;
-            users.push(user);
-            $cookies.putObject('users', users);
+            user.id = id();
+            user.voteProjects = [];
+            addToCollection(user, 'users');
             $scope.login(user);
         };
 
@@ -79,42 +121,59 @@ angular.module('myApp')
             return user;
         };
 
-        $scope.saveUser = function (user) {
-            var users = $cookies.getObject('users');
-            if (!users) {
-                users = [];
-            }
-            ;
-
-            var oldUser = $scope.findUserByName(users, $rootScope.currentUser.email);
-            var i = users.indexOf(oldUser);
-            if (i !== -1) {
-                users.splice(i, 1);
-            }
-            users.push(user);
-            $cookies.putObject('users', users);
-            $cookies.putObject('currentUser', user);
-            $rootScope.currentUser = user;
-            $scope.isInfoSaved = true;
+        function addObject(object, collectionName) {
+            dropCollection(collectionName);
+            $window.localStorage.setItem(collectionName, JSON.stringify(object));
         };
 
-        $scope.addToCollection = function (object, collectionName) {
+        function addToCollection(object, collectionName) {
             var objects = getCollection(collectionName);
-
             objects.push(object);
-            // $window.localStorage.setItem(collectionName,objects);
-            $cookies.putObject(collectionName, objects);
+            dropCollection(collectionName);
+            $window.localStorage.setItem(collectionName, JSON.stringify(objects));
         };
 
-        function getCollection(collectionName) {
-            // var objects = $window.localStorage.getItem(collectionName);
-            var objects = $cookies.getObject(collectionName);
-            if (!objects) {
-                objects = [];
+        function updateElementInCollection(object, collectionName) {
+            var objects = getCollection(collectionName);
+            var newObjects = objects.map(function (element) {
+                if (element.id == object.id) {
+                    element = object;
+                }
+                return element
+            });
+            addObject(newObjects, collectionName);
+        }
+
+        function dropCollection(collectionName) {
+            $window.localStorage.removeItem(collectionName);
+        }
+
+        function getObject(collectionName) {
+            return getCollection(collectionName, true);
+        }
+
+        function getCollection(collectionName, isSingleObject) {
+            var objects = $window.localStorage.getItem(collectionName);
+            // var objects = $cookies.getObject(collectionName);
+            if (!objects || objects == null) {
+                objects = isSingleObject ? null : [];
+            } else {
+                objects = JSON.parse(objects);
             }
-            ;
-            return objects;
-        };
 
+            return objects;
+        }
+
+        function id() {
+            return new Date().getUTCMilliseconds();
+        }
+
+        function removeFromArr(arr, element) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i] === element) {
+                    arr.splice(i, 1);
+                }
+            }
+        }
     })
 ;
