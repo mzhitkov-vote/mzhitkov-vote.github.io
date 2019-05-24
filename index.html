@@ -23,7 +23,7 @@
     <script src="js/vote-ctrl.js"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body ng-app="myApp">
+<body ng-app="myApp" style="display: none;">
 <div id="vote-page" ng-controller="voteCtrl">
     <div ng-show="!isLogined()" ng-view=""></div>
     <div ng-show="isLogined()" class="container">
