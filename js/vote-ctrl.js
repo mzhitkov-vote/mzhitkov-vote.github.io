@@ -22,6 +22,8 @@ angular.module('myApp')
             project.user = $rootScope.currentUser;
             project.voteUsers = [];
             project.createdAt = (new Date()).toLocaleString('en-US', {hour12: false});
+            project.fromDate = project.fromDate.toLocaleString('en-US', {hour12: false});
+            project.toDate = project.toDate.toLocaleString('en-US', {hour12: false});
             addToCollection(project, "projects");
             $rootScope.projects = getCollection('projects');
             alert("Проект подано. Ви його можете побачити у списку всіх проектів.");

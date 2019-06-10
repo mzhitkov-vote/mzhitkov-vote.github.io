@@ -18,5 +18,12 @@
         </select>
     </div>
 
+    <div class="form-inline form-group">
+        <label for="fromDate">Голосування проводитиметься в такі дні: </label>
+        <input type="date" class="form-control" id="fromDate" ng-model="project.fromDate" >
+        <input type="date" class="form-control" id="toDate" ng-model="project.toDate" >
+    </div>
+
+
     <button type="submit" class="btn btn-primary mb-2 btn-color" ng-click="createProject(project)">Запропонувати проект</button>
 </form>
